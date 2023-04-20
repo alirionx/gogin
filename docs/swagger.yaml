@@ -1,0 +1,143 @@
+definitions:
+  main.id:
+    properties:
+      id:
+        type: string
+    type: object
+  main.msg:
+    properties:
+      message:
+        type: string
+    type: object
+  tools.Person:
+    properties:
+      email:
+        type: string
+      firstname:
+        type: string
+      id:
+        type: string
+      lastname:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: Hello From the API
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.msg'
+      tags:
+      - root
+  /person:
+    post:
+      consumes:
+      - application/json
+      description: Create new person item
+      parameters:
+      - description: Person struct
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/tools.Person'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.id'
+      tags:
+      - persons
+  /person/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Edit person item
+      parameters:
+      - description: Person ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/main.id'
+      tags:
+      - persons
+    get:
+      consumes:
+      - application/json
+      description: Get person item by id
+      parameters:
+      - description: Person ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/tools.Person'
+            type: array
+      tags:
+      - persons
+    put:
+      consumes:
+      - application/json
+      description: Edit person item
+      parameters:
+      - description: Person ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Person struct
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/tools.Person'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/tools.Person'
+      tags:
+      - persons
+  /persons:
+    get:
+      consumes:
+      - application/json
+      description: Get list of person items
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/tools.Person'
+            type: array
+      tags:
+      - persons
+swagger: "2.0"
