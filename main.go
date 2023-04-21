@@ -4,6 +4,7 @@ package main
 import (
 	"gogin/tools"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
@@ -36,7 +37,8 @@ type id struct {
 // @Success 200 {object} msg
 // @Router / [get]
 func HelloFromTheApi(ctx *gin.Context) {
-	myMsg := msg{Message: "Hello from the API"}
+	nowStr := time.Now().Format("2006-01-02 15:04:05")
+	myMsg := msg{Message: "Hello from the API [" + nowStr + "]"}
 	ctx.JSON(http.StatusOK, myMsg)
 }
 
@@ -116,13 +118,11 @@ func PersonPut(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
-
 	person := new(tools.Person)
 	if err := ctx.BindJSON(&person); err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"message": err.Error()})
 		return
 	}
-
 	if _, err := persons.Change(id, *person); err != nil {
 		ctx.JSON(http.StatusNotFound, gin.H{"message": err.Error()})
 		return
@@ -159,8 +159,7 @@ func PersonDelete(ctx *gin.Context) {
 // -------------------------
 // -------------------------
 
-// App Runner-----------------------------------
-
+// ------------------------------------------------
 func main() {
 	router := gin.Default()
 	gin.SetMode(gin.DebugMode)
@@ -179,12 +178,7 @@ func main() {
 
 	router.DELETE("/api/person/:id", PersonDelete)
 
-	// -------------------
-	// Testing
-	// nowStr := time.Now().Format("2006-01-02 15:04:05")
-	// fmt.Println(nowStr)
-
-	// The Runner -------------------
+	// The Runner -----------------------------
 	router.GET("/docs/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	router.Run()
 }
